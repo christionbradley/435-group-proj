@@ -23,9 +23,16 @@ This is done until one list remains, which will be the final sorted list. We wil
 ```
 Merge Sort: 
 
-void merge(arr, left, right){
+void merge(arr1, arr2, left, right){
+  int l, ar
 }
-void merge_sort(arr){
+void merge_sort(int *arr1, int* arr2, int left, int right){
+  if (right <= left) {
+  middle = (left + right) // 2;
+  merge_sort(arr1, arr2, left, middle);
+  merge_sort(arr1, arr2, middle + 1, right);
+  merge(arr1, arr2, left, right);
+} 
 }
 int main() {
   arr = array of elements to be sorted;
@@ -39,6 +46,27 @@ int main() {
 
   int *w_arr = malloc(size * sizeof(int)); // portion of array for worker to sort
   mergeSort(workers_arr, w_arr, 0, size - 1);
+
+  if (this is master process) {
+    final_list = malloc(arr.size() * sizeof(int));
+   }
+
+MPI_Gather(worker_arr, size, MPI_INT, final_list, size, MPI_INT, 0, MPI_COMM_WORLD);
+
+  if (this is master process) {
+  int* helper_arr malloc(arr.size() * sizeof(int));
+  mergeSort(final_list, helper_arr, 0, arr.size() - 1);
+  print(final_list);
+
+  free(final_list); free(helper_arr);
+  
+}
+
+MPI_Barrier(MPI_COMM_WORLD);
+MPI_Finalize();
+
+}
+
 ```
   
   
