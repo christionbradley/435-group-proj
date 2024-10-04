@@ -3,10 +3,10 @@
 ## 0. Group number: 
 
 ## 1. Group members:
-1. First
-2. Second
-3. Third
-4. Fourth
+1. Christion Bradley
+2. Warren Wu
+3. Sua Bae
+4. Kunal Jain
 
 ## 2. Project topic (e.g., parallel sorting algorithms)
 
@@ -14,7 +14,7 @@
 
 - Bitonic Sort:
 - Sample Sort:
-- Merge Sort:
+- Merge Sort: - christion
 - Radix Sort:
 
 ### 2b. Pseudocode for each parallel algorithm
