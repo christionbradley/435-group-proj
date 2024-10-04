@@ -21,6 +21,29 @@ This is done until one list remains, which will be the final sorted list. We wil
 ### 2b. Pseudocode for each parallel algorithm
 - For MPI programs, include MPI calls you will use to coordinate between processes
 
+Merge Sort: 
+
+void merge(arr, left, right){
+}
+void merge_sort(arr){
+}
+int main() {
+  arr = array of elements to be sorted;
+  MPI_Init();
+  MPI_Comm_rank(...);
+  MPI_Comm_size(...);
+
+  int size = arr.size() / n_workers;
+  int *workers_arr = malloc(size * sizeof(int)); // portion of array for worker to sort
+  MPI_Scatter(arr, size, MPI_INT, workers_arr, size, MPI_INIT, 0, MPI_COMM_WORLD);
+
+  int *w_arr = malloc(size * sizeof(int)); // portion of array for worker to sort
+  mergeSort(workers_arr, w_arr, 0, size - 1);
+
+  
+  
+  
+
 ### 2c. Evaluation plan - what and how will you measure and compare
 - Input sizes, Input types
 - Strong scaling (same problem size, increase number of processors/nodes)
