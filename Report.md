@@ -1,6 +1,6 @@
 # CSCE 435 Group project
 
-## 0. Group number: 
+## 0. Group number: 12
 
 ## 1. Group members:
 1. Christion Bradley
@@ -14,7 +14,8 @@
 
 - Bitonic Sort:
 - Sample Sort:
-- Merge Sort: - christion
+- Merge Sort: For a list of size n, Merge Sort recursively splits the list into n sublists, where each sublist contains a single element and is therefore sorted. These sublists are then combined into larger lists where smaller elements appear before larger elements.
+This is done until one list remains, which will be the final sorted list. We will be implementing this algorithm on the TAMU Grace Cluster using MPI to communicate between processes. 
 - Radix Sort:
 
 ### 2b. Pseudocode for each parallel algorithm
