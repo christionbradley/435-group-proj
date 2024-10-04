@@ -12,7 +12,9 @@
 
 ## 2. Project topic (e.g., parallel sorting algorithms)
 
-This project focuses on various implementations of parallel sorting algorithms. We will compare the ability to parallelize different sorting algorithms by comparing their parallel performance, implementation complexity, and memory usage.
+Parallel sorting is incredibly important for processing large amounts of data efficiently on distributed systems/multicore processors. 
+
+This project focuses on various parallel sorting algorithms and their implementations, with the goal of understanding how they can be optimized for perfomance on parallel architechture. Specifically, we will compare the parallel performance, implementation complexity, and memory usage of Bitonic Sort, Sample Sort, Merge Sort, and Radix Sort using the Message Passing Interface. 
 
 ### 2a. Brief project description (what algorithms will you be comparing and on what architectures)
 
@@ -27,15 +29,13 @@ This is done until one list remains, which will be the final sorted list. We wil
 ```
 Bitonic Sort:
 
-// Recursively sorts a bitonic sequence in ascending order if dir==1,
-// and in descending order if dir==0.
 void bitonic_merge(int a[], int low, int cnt, int dir)
 {
   if (cnt > 1)
   {
     int k = cnt / 2;
     for (int i = low; i < low+k; i++)
-      if (dir == (a[i] > a[i+k])) { // if out of order, swap elements
+      if (dir == (a[i] > a[i+k])) { 
         int temp = arr[i];
         arr[i] = arr[i + k];
         arr[i + k] = temp;
@@ -45,9 +45,6 @@ void bitonic_merge(int a[], int low, int cnt, int dir)
   }
 }
 
-// Generates a bitonic sequence by recursively sorting the first half in an 
-// ascendng order and the second half in the descending order 
-// & then merges the two together
 void bitonic_sort(int a[], int low, int cnt, int dir)
 {
   if (cnt > 1)
@@ -62,33 +59,32 @@ void bitonic_sort(int a[], int low, int cnt, int dir)
 int main() {
   int rank, size, n_workers, n;
   int* arr = array to be sorted;
-  int* workers_arr = NULL; // Local sub-array for each worker
-  int* final_list = NULL;  // Final sorted array on master process
+  int* workers_arr = NULL; 
+  int* final_list = NULL;  
 
   MPI_Init();
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &n_workers);
 
-  // Initialize the array
-  if (this is the master process) {
-    n = sizeof(arr) / sizeof(arr[0]);  // get array size
+  if (rank == 0) {
+    n = sizeof(arr) / sizeof(arr[0]);
   }
 
-  MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD); // broadcast array size to all processes
-  int local_size = n / n_workers; // calculate the size of subarray for each worker
-  workers_arr = (int*)malloc(local_size * sizeof(int)); // allocate memory
+  MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD); 
+  int local_size = n / n_workers;
+  workers_arr = (int*)malloc(local_size * sizeof(int));
 
-  MPI_Scatter(arr, local_size, MPI_INT, workers_arr, local_size, MPI_INT, 0, MPI_COMM_WORLD); // distribute subarrays to each worker process
-  bitonic_sort(workers_arr, 0, local_size, 1); // perform bitonic sort within each worker process
+  MPI_Scatter(arr, local_size, MPI_INT, workers_arr, local_size, MPI_INT, 0, MPI_COMM_WORLD); 
+  bitonic_sort(workers_arr, 0, local_size, 1); 
 
-  if (this is the master process) {
+  if (rank == 0) {
       final_list = (int*)malloc(n * sizeof(int));
   }
 
-  MPI_Gather(workers_arr, local_size, MPI_INT, final_list, local_size, MPI_INT, 0, MPI_COMM_WORLD); // gather all subarrays
+  MPI_Gather(workers_arr, local_size, MPI_INT, final_list, local_size, MPI_INT, 0, MPI_COMM_WORLD); 
 
-  if (this is the master process) {
-    bitonic_sort(final_list, 0, n, 1); // final bitonic sort on the entire array
+  if (rank == 0) {
+    bitonic_sort(final_list, 0, n, 1); 
     free(final_list);
   }
 
@@ -102,37 +98,40 @@ int main() {
 ```
 Merge Sort: 
 
-void merge(arr, temp, left, right){
+void merge(int arr[], int temp[], int left, int right) {
   int b = left;
   int l = left;
-  int middle = ((left + right) / 1);
+  int middle = (left + right) / 2;
   int r = middle + 1;
 
-  while ((l <= middle && r <= right) {
-      if (arr[l] <= arr[r]) {
-      temp[b] = arr[l]; l += 1;
+  while (l <= middle && r <= right) {
+    if (arr[l] <= arr[r]) {
+      temp[b++] = arr[l++];
     } else {
-      temp[b] = arr[r]; r += 1;
+      temp[b++] = arr[r++];
     }
-    b_idx += 1;
   }
 
-  if (middle < left) { // still values in right array
-      for i from r to right {
-          temp[b_idx] = arr[i]; b_idx += 1;
-      }
-  } else { // still values in the left array
-      for i from l to middle {
-                temp[b_idx] = arr[i]; b_idx += 1;
-      }
+  while (l <= middle) {
+    temp[b++] = arr[l++];
+  }
+
+  while (r <= right) {
+    temp[b++] = arr[r++];
+  }
+
+  for (int i = left; i <= right; i++) {
+    arr[i] = temp[i];
+  }
 }
 
-  for i from to right {
-      a[i] = temp[i];
+void merge_sort(int arr[], int temp[], int left, int right) {
+  if (left < right) {
+    int middle = (left + right) / 2;
+    merge_sort(arr, temp, left, middle);
+    merge_sort(arr, temp, middle + 1, right);
+    merge(arr, temp, left, right);
   }
-  
-}
-    
 }
 void merge_sort(int* arr, int* temp, int left, int right){
   if (left < right) {
@@ -145,33 +144,32 @@ void merge_sort(int* arr, int* temp, int left, int right){
 int main() {
   arr = array of elements to be sorted;
   MPI_Init();
-  MPI_Comm_rank(...);
-  MPI_Comm_size(...);
+  int rank, n_workers;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &n_workers);
 
   int size = arr.size() / n_workers;
-  int *workers_arr = malloc(size * sizeof(int)); // portion of array for worker to sort
+  int *workers_arr = malloc(size * sizeof(int)); 
   MPI_Scatter(arr, size, MPI_INT, workers_arr, size, MPI_INIT, 0, MPI_COMM_WORLD);
 
-  int *w_arr = malloc(size * sizeof(int)); // portion of array for worker to sort
+  int *w_arr = malloc(size * sizeof(int)); 
   mergeSort(workers_arr, w_arr, 0, size - 1);
 
-  if (this is master process) {
+  if (rank == 0) {
     final_list = malloc(arr.size() * sizeof(int));
    }
 
-MPI_Gather(worker_arr, size, MPI_INT, final_list, size, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Gather(worker_arr, size, MPI_INT, final_list, size, MPI_INT, 0, MPI_COMM_WORLD);
 
-  if (this is master process) {
-  int* helper_arr malloc(arr.size() * sizeof(int));
-  mergeSort(final_list, helper_arr, 0, arr.size() - 1);
-  print(final_list);
+  if (rank == 0) {
+    int* helper_arr malloc(arr.size() * sizeof(int));
+    mergeSort(final_list, helper_arr, 0, arr.size() - 1);
+    print(final_list);
+    free(final_list); free(helper_arr);
+  }
 
-  free(final_list); free(helper_arr);
-  
-}
-
-MPI_Barrier(MPI_COMM_WORLD);
-MPI_Finalize();
+  MPI_Barrier(MPI_COMM_WORLD);
+  MPI_Finalize();
 
 }
 
@@ -180,42 +178,34 @@ MPI_Finalize();
 Sample Sort
 
 int main() {
-    // initialize array and setup mpi calls (assume array is already populated with elements)
     arr = array of elements to be sorted;
     MPI_Init();
     MPI_Comm_rank(...);
     MPI_Comm_size(...);
 
-    // set up local information and processes
     int localSize = arr.size() / size;
     localData = sequence of elements of size localSize;
     MPI_Scatter(arr, localSize, MPI_INT, localData, localSize, MPI_INT, 0, MPI_COMM_WORLD);
 
-    // sort the local data from each process locally
     sort(localData);
 
-    // gather data back to root
     localSortedData[arr.size()];
     MPI_Gather(localData, arr.size(), MPI_INT, localSortedData, arr.size(), MPI_INT, 0, MPI_COMM_WORLD);
 
-    // choosing a splitter locally
     splitter[size-1];
     for i=0 to size-1 {
         splitter[i] = localData[arr.size()/(size*size) * (i+1)];
     }
 
-    // gather splitters back to root
     allSplitters[size*(size-1)];
     MPI_Gather(splitter, size-1, MPI_INT, allSplitters, size-1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    // choosing a global splitter and broadcasting it to all processes
     sort(allSplitters);
     for i=0 to size-1 {
         splitter[i] = allSplitters[(size-1)*(i+1)];
     }
     MPI_Bcast(spliiter, size-1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    // creating buckets locally
     buckets[size];
     for i=0 to localSize {
         int bucketIndex = 0;
@@ -225,11 +215,9 @@ int main() {
         buckets[bucketIndex].append(localData[i]);
     }
 
-    // sending buckets to correct processors
     bucketBuffer[arr.size()+size]
     MPI_Alltoall(buckets, localSize+1, MPI_INT, bucketBuffer, localSize+1, MPI_INT, MPI_COMM_WORLD);
 
-    // rearrange bucket buffer by creating local bucket and sort local bucket
     localBucket[2*arr.size()/size];
     counter = 1;
     for i=0 to size {
@@ -243,7 +231,6 @@ int main() {
     localBucket[0] = counter-1;
     sort(localBucket);
 
-    // gather sorted blocks to root process
     sortedArr[arr.size()];
     MPI_Gather(localBucket, arr.size(), MPI_INT, sortedArr, arr.size() , MPI_INT, 0, MPI_COMM_WORLD);
 
@@ -340,4 +327,4 @@ We will increase the number of processes by powers of two: 2, 4, 8, 16, 32, and 
 If an algorithm parallelizes well, then increasing the number of processes should continue to decrease the computation time.
 
 - Weak scaling (increase problem size, increase number of processors)
-We will inncrease the size of the array (128, 1024, and 8192) alongside increasing the number of processes (2, 4, 8, 16, 32, 64) in order to determine how well these algorithms can be parallelized. 
+We will increase the size of the array (128, 1024, and 8192) alongside increasing the number of processes (2, 4, 8, 16, 32, 64) in order to determine how well these algorithms can be parallelized. 
