@@ -12,7 +12,7 @@
 
 ## 2. Project topic (e.g., parallel sorting algorithms)
 
-This project focuses on various implementations of parallel sorting algorithms. We well compare the ability to parallelize different sorting algorithms by comparing their parallel speed, complexity to implement, and memory usage.
+This project focuses on various implementations of parallel sorting algorithms. We will compare the ability to parallelize different sorting algorithms by comparing their parallel performance, implementation complexity, and memory usage.
 
 ### 2a. Brief project description (what algorithms will you be comparing and on what architectures)
 
@@ -21,10 +21,9 @@ This sorting algorithm will be using MPI on TAMU Grace Cluster by dividing the a
 - Sample Sort: An irregular algorithm similar to parallelized bucket sort except there are p-1 pivot points. Sample sort first splits an array of size n into different processes that is then sorted locally. From there the "splitters" are found and the local sequence is split into different sequences according to the splitters. Lastly, for each of the sequences they are merged locally
 - Merge Sort: For a list of size n, Merge Sort recursively splits the list into n sublists, where each sublist contains a single element and is therefore sorted. These sublists are then combined into larger lists where smaller elements appear before larger elements.
 This is done until one list remains, which will be the final sorted list. We will be implementing this algorithm on the TAMU Grace Cluster using MPI to communicate between processes. 
-- Radix Sort:
+- Radix Sort: Radix sort sorts numbers digit by digit starting from the least to most significant digit. In parallelized radix sort, the array will be distributed among subprocesses, with each process performing the sorting for one or more digits. After sorting based on the current digit, the processes will communicate with each other to exchange data to ensure that the elements are properly distributed for the next iteration. This algorithm will also be implemented using MPI and ran on the Grace Cluster. 
 
 ### 2b. Pseudocode for each parallel algorithm
-- For MPI programs, include MPI calls you will use to coordinate between processes
 ```
 Bitonic Sort:
 
@@ -251,6 +250,84 @@ int main() {
     MPI_Finalize();
     return 0;
 }
+```
+```
+Radix Sort:
+
+int getMax(int arr[], int n) {
+    int max = arr[0];
+    for (int i = 1; i < n; i++)
+        if (arr[i] > max)
+            max = arr[i];
+    return max;
+}
+
+void countSort(int arr[], int n, int exp) {
+    int* output = (int*)malloc(n * sizeof(int));
+    int count[10] = {0};
+
+    for (int i = 0; i < n; i++)
+        count[(arr[i] / exp) % 10]++;
+
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+
+    for (int i = 0; i < n; i++)
+        arr[i] = output[i];
+
+    free(output);
+}
+
+void radixSort(int arr[], int n) {
+    int m = getMax(arr, n);
+
+    for (int exp = 1; m / exp > 0; exp *= 10) {
+        countSort(arr, n, exp);
+    }
+}
+
+int main(int argc, char** argv) {
+    int rank, size, n;
+    int* arr = NULL;
+    int* local_arr = NULL;
+    
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    if (rank == 0) {
+        n = /* size of the array */;
+        arr = (int*)malloc(n * sizeof(int));
+    }
+
+    MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    int local_size = n / size;
+    local_arr = (int*)malloc(local_size * sizeof(int));
+
+    MPI_Scatter(arr, local_size, MPI_INT, local_arr, local_size, MPI_INT, 0, MPI_COMM_WORLD);
+
+    radixSort(local_arr, local_size);
+
+    MPI_Gather(local_arr, local_size, MPI_INT, arr, local_size, MPI_INT, 0, MPI_COMM_WORLD);
+
+    if (rank == 0) {
+        radixSort(arr, n);
+    }
+
+    free(local_arr);
+    if (rank == 0)
+        free(arr);
+
+    MPI_Finalize();
+    return 0;
+}
+
 ```
 
 ### 2c. Evaluation plan - what and how will you measure and compare
