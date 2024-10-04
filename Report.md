@@ -1,7 +1,7 @@
 # CSCE 435 Group project
 
 ## 0. Group number: 12
-
+12
 ## 1. Group members:
 1. Christion Bradley
 2. Warren Wu
@@ -11,6 +11,8 @@
 * communication via: iMessage & Discord
 
 ## 2. Project topic (e.g., parallel sorting algorithms)
+
+This project focuses on various implementations of parallel sorting algorithms. We well compare the ability to parallelize different sorting algorithms by comparing their parallel speed, complexity to implement, and memory usage.
 
 ### 2a. Brief project description (what algorithms will you be comparing and on what architectures)
 
@@ -252,6 +254,13 @@ int main() {
 ```
 
 ### 2c. Evaluation plan - what and how will you measure and compare
-- Input sizes, Input types
+- Input sizes, Input types:
+We will measure the time in seconds that it takes for each algorithm to sort a given array of elements.
+We will sort arrays of consisting of integers with size 128, 1024, and 8192 to determine the speed of each algorithm.
+
 - Strong scaling (same problem size, increase number of processors/nodes)
+We will increase the number of processes by powers of two: 2, 4, 8, 16, 32, and 64 processes.
+If an algorithm parallelizes well, then increasing the number of processes should continue to decrease the computation time.
+
 - Weak scaling (increase problem size, increase number of processors)
+We will inncrease the size of the array (128, 1024, and 8192) alongside increasing the number of processes (2, 4, 8, 16, 32, 64) in order to determine how well these algorithms can be parallelized. 
