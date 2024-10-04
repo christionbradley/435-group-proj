@@ -56,7 +56,7 @@ void merge(arr, temp, left, right){
     
 }
 void merge_sort(int* arr, int* temp, int left, int right){
-  if (right <= left) {
+  if (left < right) {
   middle = (left + right) // 2;
   merge_sort(arr1, arr2, left, middle);
   merge_sort(arr1, arr2, middle + 1, right);
