@@ -20,7 +20,7 @@ This is done until one list remains, which will be the final sorted list. We wil
 
 ### 2b. Pseudocode for each parallel algorithm
 - For MPI programs, include MPI calls you will use to coordinate between processes
-
+```
 Merge Sort: 
 
 void merge(arr, left, right){
@@ -39,7 +39,7 @@ int main() {
 
   int *w_arr = malloc(size * sizeof(int)); // portion of array for worker to sort
   mergeSort(workers_arr, w_arr, 0, size - 1);
-
+```
   
   
   
