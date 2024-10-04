@@ -24,17 +24,38 @@ This is done until one list remains, which will be the final sorted list. We wil
 Merge Sort: 
 
 void merge(arr, temp, left, right){
-  int a_idx = left;
+  int b = left;
   int l = left;
   int middle = ((left + right) / 1);
   int r = middle + 1;
 
   while ((l <= middle && r <= right) {
-      if (arr[l] <= 
+      if (arr[l] <= arr[r]) {
+      temp[b] = arr[l]; l += 1;
+    } else {
+      temp[b] = arr[r]; r += 1;
+    }
+    b_idx += 1;
+  }
+
+  if (middle < left) { // still values in right array
+      for i from r to right {
+          temp[b_idx] = arr[i]; b_idx += 1;
+      }
+  } else { // still values in the left array
+      for i from l to middle {
+                temp[b_idx] = arr[i]; b_idx += 1;
+      }
+}
+
+  for i from to right {
+      a[i] = temp[i];
   }
   
 }
-void merge_sort(int arr, int temp, int left, int right){
+    
+}
+void merge_sort(int* arr, int* temp, int left, int right){
   if (right <= left) {
   middle = (left + right) // 2;
   merge_sort(arr1, arr2, left, middle);
