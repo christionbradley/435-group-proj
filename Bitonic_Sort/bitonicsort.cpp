@@ -86,6 +86,8 @@ int main(int argc, char** argv) {
     CALI_MARK_BEGIN("main");
 
     int list_size;
+    std::string list_type;
+    
     if (argc >= 2)
     {
         list_size = atoi(argv[1]);
