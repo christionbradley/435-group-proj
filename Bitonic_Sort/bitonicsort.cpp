@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
 
     int list_size;
     std::string list_type;
-    
+
     if (argc >= 2)
     {
         list_size = atoi(argv[1]);
@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
     if (rank == 0) {
         og_arr = (int*)malloc(list_size * sizeof(int));
         CALI_MARK_BEGIN("data_init_runtime");
-        data_init_runtime(og_data, list_size, list_type);
+        data_init_runtime(og_arr, list_size, list_type);
         CALI_MARK_END("data_init_runtime");
     }
 
@@ -168,19 +168,19 @@ int main(int argc, char** argv) {
 
         std::cout << "Sorted data: ";
         for (int i = 0; i < std::min(list_size, 1000); i++) {
-            std::cout << og_data[i] << " ";
+            std::cout << og_arr[i] << " ";
         }
         std::cout << std::endl;
         
         std::cout << "Sorted!" << std::endl;
         
         CALI_MARK_BEGIN("correctness_check");
-        if (!correctness_check(og_data, list_size)) {
+        if (!correctness_check(og_arr, list_size)) {
             throw std::runtime_error("List not Sorted!");
         }
         CALI_MARK_END("correctness_check");
 
-        free(og_arr)
+        free(og_arr);
         free(final_list);
     }
 
