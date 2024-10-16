@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <stdexcept>
 
 #include <caliper/cali.h>
 #include <caliper/cali-manager.h>
@@ -155,8 +156,6 @@ int main(int argc, char** argv) {
     CALI_MARK_END("comm_large");
     CALI_MARK_END("comm");
 
-    free(workers_arr);
-
     if (rank == 0) {
         CALI_MARK_BEGIN("comp");
         CALI_MARK_BEGIN("comp_large");
@@ -168,20 +167,24 @@ int main(int argc, char** argv) {
 
         std::cout << "Sorted data: ";
         for (int i = 0; i < std::min(list_size, 1000); i++) {
-            std::cout << og_arr[i] << " ";
+            std::cout << final_list[i] << " ";
         }
         std::cout << std::endl;
         
         std::cout << "Sorted!" << std::endl;
         
         CALI_MARK_BEGIN("correctness_check");
-        if (!correctness_check(og_arr, list_size)) {
+        if (!correctness_check(final_list, list_size)) {
             throw std::runtime_error("List not Sorted!");
         }
         CALI_MARK_END("correctness_check");
 
-        free(og_arr);
         free(final_list);
+    }
+
+    free(workers_arr);
+    if (rank == 0) {
+        free(og_arr);
     }
 
     CALI_MARK_END("main");
