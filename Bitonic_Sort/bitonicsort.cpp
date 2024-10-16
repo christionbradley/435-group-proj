@@ -74,14 +74,14 @@ void bitonic_sort(int a[], int low, int cnt, int dir) {
 }
 
 int main(int argc, char** argv) {
-    int rank, size, local_size;
+    int rank, num_tasks, local_size;
     int* og_arr = NULL;
     int* workers_arr = NULL;
     int* final_list = NULL;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_size(MPI_COMM_WORLD, &num_tasks);
 
     CALI_MARK_BEGIN("main");
 
@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
 
     MPI_Bcast(&list_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    local_size = list_size / size;
+    local_size = list_size / num_tasks;
     workers_arr = (int*)malloc(local_size * sizeof(int));
 
     CALI_MARK_BEGIN("comm");
@@ -144,7 +144,7 @@ int main(int argc, char** argv) {
     CALI_MARK_END("comp");
 
     if (rank == 0) {
-        final_list = (int*)malloc(n * sizeof(int));
+        final_list = (int*)malloc(list_size * sizeof(int));
     }
 
     CALI_MARK_BEGIN("comm");
@@ -161,7 +161,7 @@ int main(int argc, char** argv) {
         CALI_MARK_BEGIN("comp");
         CALI_MARK_BEGIN("comp_large");
 
-        bitonic_sort(final_list, 0, n, 1);
+        bitonic_sort(final_list, 0, list_size, 1);
 
         CALI_MARK_END("comp_large");
         CALI_MARK_END("comp");
