@@ -1,0 +1,3 @@
+/scratch/user/weiwu/proj-1-test/CMakeFiles/rebuild_cache.dir
+/scratch/user/weiwu/proj-1-test/CMakeFiles/edit_cache.dir
+/scratch/user/weiwu/proj-1-test/CMakeFiles/samplesort.dir
