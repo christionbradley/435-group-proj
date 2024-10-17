@@ -331,9 +331,10 @@ We will increase the size of the array (128, 1024, and 8192) alongside increasin
 
 
 ### 3a. Caliper instrumentation
-Bitonic Sort Implementation Description:
+#### Bitonic Sort Implementation Description:
 I used MPI for parallel processing to implement Bitonic Sort, distributing the original array into multiple worker processes to enable local sorting. The master process initializes the array based on user input of list type (random, sorted, reverse sorted, or 1% perturbed) and scatters the array among all processes. Each process performs local bitonic sorting. During the bitonic sort, the array is recursively divided into two parts: one sorted in ascending order and the other in descending order. They are then merged into a single sorted sequence during the bitonic merge, where pairs of elements from the two halves are compared and swapped based on the desired sorting order. This process is repeated recursively until the entire array is sorted. After each worker process finishes locally sorting its subarray, the sorted subarrays are gathered back at the master process, which performs a final bitonic sort to merge the results. After the final bitonic sort, the correctness of sorting is checked by going through the final list and checking if the array is actually sorted. 
 
+```
 MPI Bitonic Sort Calltree:
 0.011 main
 ├─ 0.001 data_init_runtime
@@ -350,10 +351,12 @@ MPI Bitonic Sort Calltree:
 0.000 MPI_Initialized
 0.000 MPI_Finalized
 0.001 MPI_Comm_dup
+```
 
-Merge Sort Implementation Description:
+#### Merge Sort Implementation Description:
 I used MPI to implement the Parallel Merge Sort Algorithm. I distrubute a portion of the input array to each worker, and each worker uses merge sort to sort their portion of the array. This consists of recursively dividing an array of size n into n sub arrays. Each subarray contains one element, and is therefore sorted. Then each element is merged into one array, each process will return a single sorted array. Once all processes have sorted their portion, they then recieve indices of the final array that they will then merge. Each level is then merged by a pair of processes until the entire final array has been sorted.
 
+```
 0.154 main
 ├─ 0.039 data_init_runtime
 ├─ 0.147 comm
@@ -371,11 +374,35 @@ I used MPI to implement the Parallel Merge Sort Algorithm. I distrubute a portio
 0.000 MPI_Initialized
 0.000 MPI_Finalized
 0.023 MPI_Comm_dup
+```
 
+#### Radix Sort Implementation Description:
+I implemented Radix Sort using MPI to leverage parallelism. The master process is responsible for initializes the array and scatters it among all available processes. Each process receives a portion of the array, which it sorts locally using the Radix Sort algorithm. Radix Sort sorts the array based on digits, starting from the least significant digit (LSD) to the most significant (MSD). This is accomplished in multiple passes, where each pass uses the countSort function to sort the elements by a specific digit determined by the current exponent value. Each process sorts its subarray independently, and once each process completes the sorting of its local data, the subarrays are gathered back by the master process using MPI Gather. The master process performs a final Radix Sort on the gathered array to ensure that the entire data set is sorted. 
+
+
+```
+0.017 main
+├─ 0.000 data_init_runtime
+├─ 0.002 MPI_Bcast
+├─ 0.000 comm
+│  ├─ 0.000 comm_small
+│  │  └─ 0.000 MPI_Scatter
+│  └─ 0.000 comm_large
+│     └─ 0.000 MPI_Gather
+├─ 0.000 comp
+│  ├─ 0.000 comp_small
+│  └─ 0.000 comp_large
+└─ 0.000 correctness_check
+0.000 MPI_Finalize
+0.000 MPI_Initialized
+0.000 MPI_Finalized
+0.015 MPI_Comm_dup
+```
 
 ### 3b. Collect Metadata
 
-Bitonic Sort:
+#### Bitonic Sort:
+```
 {
     "cali.caliper.version": {
         "1793904175": "2.11.0"
@@ -508,8 +535,11 @@ Bitonic Sort:
         "1793904175": "ai"
     }
 }
+```
 
-Merge Sort:
+#### Merge Sort:
+
+```
 {
     "cali.caliper.version": {
         "4285520407": "2.11.0"
@@ -642,5 +672,138 @@ Merge Sort:
         "4285520407": "online"
     }
 }
+```
 
-
+#### Radix Sort
+```
+{
+    "cali.caliper.version": {
+        "54582209": "2.11.0"
+    },
+    "mpi.world.size": {
+        "54582209": 2
+    },
+    "spot.metrics": {
+        "54582209": "min#inclusive#sum#time.duration,max#inclusive#sum#time.duration,avg#inclusive#sum#time.duration,sum#inclusive#sum#time.duration,variance#inclusive#sum#time.duration,min#min#aggregate.slot,min#sum#rc.count,avg#sum#rc.count,max#sum#rc.count,sum#sum#rc.count,min#scale#sum#time.duration.ns,max#scale#sum#time.duration.ns,avg#scale#sum#time.duration.ns,sum#scale#sum#time.duration.ns"
+    },
+    "spot.timeseries.metrics": {
+        "54582209": ""
+    },
+    "spot.format.version": {
+        "54582209": 2
+    },
+    "spot.options": {
+        "54582209": "time.variance,profile.mpi,node.order,region.count,time.exclusive"
+    },
+    "spot.channels": {
+        "54582209": "regionprofile"
+    },
+    "cali.channel": {
+        "54582209": "spot"
+    },
+    "spot:node.order": {
+        "54582209": "true"
+    },
+    "spot:output": {
+        "54582209": "p2-a1024.cali"
+    },
+    "spot:profile.mpi": {
+        "54582209": "true"
+    },
+    "spot:region.count": {
+        "54582209": "true"
+    },
+    "spot:time.exclusive": {
+        "54582209": "true"
+    },
+    "spot:time.variance": {
+        "54582209": "true"
+    },
+    "launchdate": {
+        "54582209": 1729108987
+    },
+    "libraries": {
+        "54582209": [
+            "/scratch/group/csce435-f24/Caliper/caliper/lib64/libcaliper.so.2",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/lib/libmpicxx.so.12",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/lib/release/libmpi.so.12",
+            "/lib64/librt.so.1",
+            "/lib64/libpthread.so.0",
+            "/lib64/libdl.so.2",
+            "/sw/eb/sw/GCCcore/10.2.0/lib64/libstdc++.so.6",
+            "/lib64/libm.so.6",
+            "/sw/eb/sw/GCCcore/10.2.0/lib64/libgcc_s.so.1",
+            "/lib64/libc.so.6",
+            "/sw/eb/sw/CUDA/12.4.0/extras/CUPTI/lib64/libcupti.so.12",
+            "/sw/eb/sw/PAPI/6.0.0-GCCcore-8.3.0/lib/libpapi.so.6.0",
+            "/lib64/ld-linux-x86-64.so.2",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/libfabric.so.1",
+            "/lib64/libutil.so.1",
+            "/sw/eb/sw/PAPI/6.0.0-GCCcore-8.3.0/lib/libpfm.so.4",
+            "/sw/eb/sw/numactl/2.0.13-GCCcore-10.2.0/lib/libnuma.so",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libshm-fi.so",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libmlx-fi.so",
+            "/sw/eb/sw/UCX/1.9.0-GCCcore-10.2.0/lib/libucp.so.0",
+            "/sw/eb/sw/zlib/1.2.11-GCCcore-10.2.0/lib/libz.so.1",
+            "/sw/eb/sw/UCX/1.9.0-GCCcore-10.2.0/lib/libuct.so.0",
+            "/sw/eb/sw/UCX/1.9.0-GCCcore-10.2.0/lib/libucs.so.0",
+            "/sw/eb/sw/UCX/1.9.0-GCCcore-10.2.0/lib/libucm.so.0",
+            "/sw/eb/sw/binutils/2.35-GCCcore-10.2.0/lib/libbfd-2.35.so",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libverbs-fi.so",
+            "/lib64/librdmacm.so.1",
+            "/lib64/libibverbs.so.1",
+            "/lib64/libnl-3.so.200",
+            "/lib64/libnl-route-3.so.200",
+            "/usr/lib64/libibverbs/libmlx5-rdmav34.so",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libpsmx2-fi.so",
+            "/lib64/libpsm2.so.2",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libsockets-fi.so",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/librxm-fi.so",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libtcp-fi.so",
+            "/sw/eb/sw/UCX/1.9.0-GCCcore-10.2.0/lib/ucx/libuct_ib.so.0",
+            "/sw/eb/sw/UCX/1.9.0-GCCcore-10.2.0/lib/ucx/libuct_rdmacm.so.0",
+            "/sw/eb/sw/UCX/1.9.0-GCCcore-10.2.0/lib/ucx/libuct_cma.so.0"
+        ]
+    },
+    "cmdline": {
+        "54582209": [
+            "./radixsort",
+            "1024",
+            "random"
+        ]
+    },
+    "cluster": {
+        "54582209": "c"
+    },
+    "algorithm": {
+        "54582209": "radix sort"
+    },
+    "programming_model": {
+        "54582209": "mpi"
+    },
+    "data_type": {
+        "54582209": "int"
+    },
+    "size_of_data_type": {
+        "54582209": 4
+    },
+    "input_size": {
+        "54582209": 1024
+    },
+    "input_type": {
+        "54582209": "random"
+    },
+    "num_procs": {
+        "54582209": 2
+    },
+    "scalability": {
+        "54582209": "strong"
+    },
+    "group_num": {
+        "54582209": 12
+    },
+    "implementation_source": {
+        "54582209": "online"
+    }
+}
+```
