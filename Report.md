@@ -351,6 +351,27 @@ MPI Bitonic Sort Calltree:
 0.000 MPI_Finalized
 0.001 MPI_Comm_dup
 
+Merge Sort Implementation Description:
+I used MPI to implement the Parallel Merge Sort Algorithm. I distrubute a portion of the input array to each worker, and each worker uses merge sort to sort their portion of the array. This consists of recursively dividing an array of size n into n sub arrays. Each subarray contains one element, and is therefore sorted. Then each element is merged into one array, each process will return a single sorted array. Once all processes have sorted their portion, they then recieve indices of the final array that they will then merge. Each level is then merged by a pair of processes until the entire final array has been sorted.
+
+0.154 main
+├─ 0.039 data_init_runtime
+├─ 0.147 comm
+│  └─ 0.147 comm_large
+│     ├─ 0.085 MPI_Scatter
+│     ├─ 0.000 MPI_Gather
+│     └─ 0.062 MPI_Gatherv
+├─ 0.006 comp
+│  ├─ 0.004 comp_small
+│  └─ 0.003 comp_large
+│     ├─ 0.002 MPI_Recv
+│     └─ 0.000 MPI_Send
+└─ 0.003 correctness_check
+0.000 MPI_Finalize
+0.000 MPI_Initialized
+0.000 MPI_Finalized
+0.023 MPI_Comm_dup
+
 
 ### 3b. Collect Metadata
 
@@ -487,4 +508,139 @@ Bitonic Sort:
         "1793904175": "ai"
     }
 }
+
+Merge Sort:
+{
+    "cali.caliper.version": {
+        "4285520407": "2.11.0"
+    },
+    "mpi.world.size": {
+        "4285520407": 64
+    },
+    "spot.metrics": {
+        "4285520407": "min#inclusive#sum#time.duration,max#inclusive#sum#time.duration,avg#inclusive#sum#time.duration,sum#inclusive#sum#time.duration,variance#inclusive#sum#time.duration,min#min#aggregate.slot,min#sum#rc.count,avg#sum#rc.count,max#sum#rc.count,sum#sum#rc.count,min#scale#sum#time.duration.ns,max#scale#sum#time.duration.ns,avg#scale#sum#time.duration.ns,sum#scale#sum#time.duration.ns"
+    },
+    "spot.timeseries.metrics": {
+        "4285520407": ""
+    },
+    "spot.format.version": {
+        "4285520407": 2
+    },
+    "spot.options": {
+        "4285520407": "time.variance,profile.mpi,node.order,region.count,time.exclusive"
+    },
+    "spot.channels": {
+        "4285520407": "regionprofile"
+    },
+    "cali.channel": {
+        "4285520407": "spot"
+    },
+    "spot:node.order": {
+        "4285520407": "true"
+    },
+    "spot:output": {
+        "4285520407": "p64-a1048576.cali"
+    },
+    "spot:profile.mpi": {
+        "4285520407": "true"
+    },
+    "spot:region.count": {
+        "4285520407": "true"
+    },
+    "spot:time.exclusive": {
+        "4285520407": "true"
+    },
+    "spot:time.variance": {
+        "4285520407": "true"
+    },
+    "launchdate": {
+        "4285520407": 1729127740
+    },
+    "libraries": {
+        "4285520407": [
+            "/scratch/group/csce435-f24/Caliper/caliper/lib64/libcaliper.so.2",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/lib/libmpicxx.so.12",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/lib/release/libmpi.so.12",
+            "/lib64/librt.so.1",
+            "/lib64/libpthread.so.0",
+            "/lib64/libdl.so.2",
+            "/sw/eb/sw/GCCcore/8.3.0/lib64/libstdc++.so.6",
+            "/lib64/libm.so.6",
+            "/sw/eb/sw/GCCcore/8.3.0/lib64/libgcc_s.so.1",
+            "/lib64/libc.so.6",
+            "/sw/eb/sw/CUDA/12.4.0/extras/CUPTI/lib64/libcupti.so.12",
+            "/sw/eb/sw/PAPI/6.0.0-GCCcore-8.3.0/lib/libpapi.so.6.0",
+            "/lib64/ld-linux-x86-64.so.2",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/libfabric.so.1",
+            "/lib64/libutil.so.1",
+            "/sw/eb/sw/PAPI/6.0.0-GCCcore-8.3.0/lib/libpfm.so.4",
+            "/lib64/libnuma.so",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libshm-fi.so",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libmlx-fi.so",
+            "/lib64/libucp.so.0",
+            "/sw/eb/sw/zlib/1.2.11-GCCcore-8.3.0/lib/libz.so.1",
+            "/usr/lib64/libuct.so.0",
+            "/usr/lib64/libucs.so.0",
+            "/usr/lib64/libucm.so.0",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libverbs-fi.so",
+            "/lib64/librdmacm.so.1",
+            "/lib64/libibverbs.so.1",
+            "/lib64/libnl-3.so.200",
+            "/lib64/libnl-route-3.so.200",
+            "/usr/lib64/libibverbs/libmlx5-rdmav34.so",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libpsmx2-fi.so",
+            "/lib64/libpsm2.so.2",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libsockets-fi.so",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/librxm-fi.so",
+            "/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib/prov/libtcp-fi.so",
+            "/usr/lib64/ucx/libuct_ib.so.0",
+            "/usr/lib64/ucx/libuct_rdmacm.so.0",
+            "/usr/lib64/ucx/libuct_cma.so.0",
+            "/usr/lib64/ucx/libuct_knem.so.0",
+            "/usr/lib64/ucx/libuct_xpmem.so.0",
+            "/usr/lib64/libxpmem.so.0"
+        ]
+    },
+    "cmdline": {
+        "4285520407": [
+            "./mergesort",
+            "1048576",
+            "random"
+        ]
+    },
+    "cluster": {
+        "4285520407": "c"
+    },
+    "algorithm": {
+        "4285520407": "merge sort"
+    },
+    "programming_model": {
+        "4285520407": "mpi"
+    },
+    "data_type": {
+        "4285520407": "int"
+    },
+    "size_of_data_type": {
+        "4285520407": 4
+    },
+    "input_size": {
+        "4285520407": 1048576
+    },
+    "input_type": {
+        "4285520407": "random"
+    },
+    "num_procs": {
+        "4285520407": 64
+    },
+    "scalability": {
+        "4285520407": "strong"
+    },
+    "group_num": {
+        "4285520407": 12
+    },
+    "implementation_source": {
+        "4285520407": "online"
+    }
+}
+
 
