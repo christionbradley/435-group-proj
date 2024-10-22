@@ -15,15 +15,27 @@
 #include <vector>
 #include <numeric>
 
-void printLocalArr(int* local_list, int local_list_size, int rank) {
-	std::cout << "\nLocal list for process " << rank << ":\n[";
-	for(int i = 0; i < local_list_size;i++) {
-		std::cout << local_list[i] << ", ";	
+bool correctnessCheck(int* list, int size) {
+	for(int i=1;i<size;i++) {
+		if (list[i] < list[i-1]) {
+			return false;
+		}
 	}
-	std::cout << "]\n";
+	return true;
 }
 
-void sample_sort(int* arr, int& local_size, int num_tasks, int rank) {
+void printLocalArr(int* local_list, int local_list_size, int rank) {
+	printf("[%d]: [", rank);
+	for(int i = 0; i < local_list_size;i++) {
+		printf("%d", local_list[i]);
+		if (i < local_list_size-1) {
+			printf(", ");
+		}
+	}
+	printf("]\n");
+}
+
+void sample_sort(int*& arr, int& local_size, int num_tasks, int rank) {
 	// ~ sort local array
 	std::sort(arr, arr + local_size);
 	// std::cout << "---SORTED LOCAL ARRAY---";
@@ -60,7 +72,7 @@ void sample_sort(int* arr, int& local_size, int num_tasks, int rank) {
 	// ~ broadcast final split values to all processes to be used in partitioning
 	MPI_Bcast(final_splits, num_splitters, MPI_INT, 0, MPI_COMM_WORLD);
 
-	// ? partition array based on final split values
+	// ~ partition array based on final split values
 	std::vector<int> partitions[num_tasks];
 	int idx = 0;
 	for (int i = 0; i < local_size; i++) {
@@ -69,8 +81,7 @@ void sample_sort(int* arr, int& local_size, int num_tasks, int rank) {
 		}
 		partitions[idx].push_back(arr[i]);
 	}
-
-	// ? send and receive data from various processes to correctly populate with correct values
+	// ~ send and receive data from various processes to correctly populate with correct values
 	int* sendcounts = (int*)malloc(num_tasks * sizeof(int));
 	int* recvcounts = (int*)malloc(num_tasks * sizeof(int));
 	int* sdispls = (int*)malloc(num_tasks * sizeof(int));
@@ -96,32 +107,31 @@ void sample_sort(int* arr, int& local_size, int num_tasks, int rank) {
 	int* sendbuf = (int*)malloc(local_size * sizeof(int));
 	int* recvbuf = (int*)malloc(total_recv * sizeof(int));
 
+	// printf("[%d]: %d (local_size), %d (total_recv)\n", rank, local_size, total_recv);
+
 	for (int i = 0; i < num_tasks; i++) {
 		std::copy(partitions[i].begin(), partitions[i].end(), sendbuf + sdispls[i]);
 	}
 
-	int result = MPI_Alltoallv(sendbuf, sendcounts, sdispls, MPI_INT, recvbuf, recvcounts, rdispls, MPI_INT, MPI_COMM_WORLD);
-
-	if (result != MPI_SUCCESS) {
-		std::cout << "alltoallv failed\n";
-	}
+	MPI_Alltoallv(sendbuf, sendcounts, sdispls, MPI_INT, recvbuf, recvcounts, rdispls, MPI_INT, MPI_COMM_WORLD);
 
 	std::sort(recvbuf, recvbuf+total_recv);
-	// std::cout << "---FINAL LOCAL ARR---";
 	// printLocalArr(recvbuf, total_recv, rank);
 
 	arr = (int*)realloc(arr, total_recv*sizeof(int));
 	std::copy(recvbuf, recvbuf+total_recv, arr);
 
 	local_size = total_recv;
-	printf("[%d] New local size: %d\n", rank, local_size)
+	// printf("[%d] New local size: %d\n", rank, local_size);
+	// printLocalArr(arr, local_size, rank);
 
-	// ? clean up memory
+	// ~ clean up memory
 	if (rank == 0) {
 		free(global_splitters);
 	}
 	free(local_splitters);
 	free(final_splits);
+
 	free(sendcounts);
 	free(recvcounts);
 	free(sdispls);
@@ -195,11 +205,11 @@ int main(int argc, char *argv[]) {
         data_init_runtime(og_data, list_size, list_type);
         CALI_MARK_END("data_init_runtime");
 
-	std::cout << "List before sample sort:[";
-	for (int i = 0; i < std::min(list_size, 1000); i++) {
-		std::cout << og_data[i] << " ";
-	}
-	std::cout << "]\n";
+	// std::cout << "List before sample sort:[";
+	// for (int i = 0; i < std::min(list_size, 1000); i++) {
+	// 	std::cout << og_data[i] << " ";
+	// }
+	// std::cout << "]\n";
     }
 
     adiak::init(NULL);
@@ -270,17 +280,25 @@ int main(int argc, char *argv[]) {
 		// }
 		// std::cout << "\n";
 		og_data = (int*)malloc(total_size * sizeof(int));
-		
-		// gather all the locally sorted list back into og
-		MPI_Gatherv(local_list, local_list_size, MPI_INT, og_data, all_local_list_sizes, displs, MPI_INT, 0, MPI_COMM_WORLD);
 	}
 
+	// gather all the locally sorted list back into og
+	MPI_Gatherv(local_list, local_list_size, MPI_INT, og_data, all_local_list_sizes, displs, MPI_INT, 0, MPI_COMM_WORLD);
+
     if (rank == 0) {
-	    std::cout << "\n---\nList after sample sort:[";
-	    for (int i = 0; i < std::min(list_size, 1000); i++) {
-		    std::cout << og_data[i] << " ";
-	    }
-	    std::cout << "]\n";
+	    // std::cout << "\n---\nList after sample sort:[";
+	    // for (int i = 0; i < std::min(list_size, 1000); i++) {
+		//     std::cout << og_data[i] << " ";
+	    // }
+	    // std::cout << "]\n";
+
+		bool correct = correctnessCheck(og_data, list_size);
+		if (correct) {
+			printf("Sorted :)\n");
+		} else {
+			printf("Not Sorted :(\n");
+			throw std::runtime_error("List Not Sorted :(");
+		}
 
 		free(all_local_list_sizes);
 		free(displs);

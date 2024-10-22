@@ -1,0 +1,3 @@
+/scratch/user/weiwu/435-group-proj/Sample_Sort/CMakeFiles/rebuild_cache.dir
+/scratch/user/weiwu/435-group-proj/Sample_Sort/CMakeFiles/edit_cache.dir
+/scratch/user/weiwu/435-group-proj/Sample_Sort/CMakeFiles/samplesort.dir
