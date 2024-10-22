@@ -6,6 +6,8 @@ list_types = ["sorted", "random", "reverse_sorted", "1%perturbed"]
 num_proc_list = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024] # [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
 
 for num_procs in num_proc_list:
+
+    
     for input_size in input_sizes:
 
         size = ""
@@ -22,7 +24,7 @@ for num_procs in num_proc_list:
         else:  
             size = "22"
             
-        processes = [subprocess.Popen(['sbatch{}'.format(size), 'mpi.grace_job', '%s' % input_size, '%s' % num_procs, list_type]) for list_type in list_types]
+        processes = [subprocess.Popen(['sbatch', 'mpi.grace_job{}'.format(size), '%s' % input_size, '%s' % num_procs, list_type]) for list_type in list_types]
         # Wait for all processes to finish
         # for process in processes:
         #     process.wait()
@@ -31,6 +33,7 @@ for num_procs in num_proc_list:
         output = subprocess.check_output(['sacct'])
         while "PENDING" in output:
             time.sleep(2)
+            output = subprocess.check_output(['sacct'])
         time.sleep(10)
         directory = '.'
         word = 'core'
