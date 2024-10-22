@@ -107,11 +107,14 @@ void sample_sort(int* arr, int& local_size, int num_tasks, int rank) {
 	}
 
 	std::sort(recvbuf, recvbuf+total_recv);
-	std::cout << "---FINAL LOCAL ARR---";
-	printLocalArr(recvbuf, total_recv, rank);
+	// std::cout << "---FINAL LOCAL ARR---";
+	// printLocalArr(recvbuf, total_recv, rank);
 
-	arr = recvbuf;
+	arr = (int*)realloc(arr, total_recv*sizeof(int));
+	std::copy(recvbuf, recvbuf+total_recv, arr);
+
 	local_size = total_recv;
+	printf("[%d] New local size: %d\n", rank, local_size)
 
 	// ? clean up memory
 	if (rank == 0) {
@@ -261,19 +264,19 @@ int main(int argc, char *argv[]) {
 			displs[i] = displs[i-1] + all_local_list_sizes[i-1];
 			total_size += all_local_list_sizes[i];
 		}
-		std::cout << "fml: " << total_size << "\n";
-		for(int i=0;i<num_tasks;i++) {
-			std::cout << all_local_list_sizes[i] << " ";
-		}
-		std::cout << "\n";
+		// std::cout << "fml: " << total_size << "\n";
+		// for(int i=0;i<num_tasks;i++) {
+		// 	std::cout << all_local_list_sizes[i] << " ";
+		// }
+		// std::cout << "\n";
 		og_data = (int*)malloc(total_size * sizeof(int));
+		
+		// gather all the locally sorted list back into og
+		MPI_Gatherv(local_list, local_list_size, MPI_INT, og_data, all_local_list_sizes, displs, MPI_INT, 0, MPI_COMM_WORLD);
 	}
-	
-    // gather all the locally sorted list back into og
-    MPI_Gatherv(local_list, local_list_size, MPI_INT, og_data, all_local_list_sizes, displs, MPI_INT, 0, MPI_COMM_WORLD);
 
     if (rank == 0) {
-	    std::cout << "List after sample sort:[";
+	    std::cout << "\n---\nList after sample sort:[";
 	    for (int i = 0; i < std::min(list_size, 1000); i++) {
 		    std::cout << og_data[i] << " ";
 	    }
