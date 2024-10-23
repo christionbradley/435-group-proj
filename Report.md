@@ -1015,13 +1015,16 @@ This is the total time for input size of 2^20. This input size is justified for 
 This is the total time for input size of 2^28. For a large input size like this, parallel processing is justified as the number of processors increases, the average time exponentially decreases since it's computationally more efficient to split tasks to a large number of worker processes.
 
 #### Merge Sort
-![65536_main](https://github.com/user-attachments/assets/6c4dda55-3cde-48b0-84cb-9f086f5d28d8)
+![65536_main](https://github.com/user-attachments/assets/44cf3cf0-a238-4526-a886-509723bb5591)
+
 This is the time taken for input size of 2^16. As you can tell, this input size is not nearly large enough to justify using parallel processing. More processes ends up taking longer due to overhead.
 
-![16777216_main](https://github.com/user-attachments/assets/27da25ff-bd34-42e4-b5fc-5dadf954c078)
+![16777216_main](https://github.com/user-attachments/assets/28b33f89-812a-48c7-bfa8-e99e9775c4db)
+
 This is the time taken for 2*24. This is just approaching the optimal input size to justify using parallel processing. There is still too much overhead compared to the granted speedup at 256 and 512 processes. Using fewer or greater processes would make more sense. 
 
-![avg_time_rank_268](https://github.com/user-attachments/assets/25fe2655-ae04-4c7e-b37f-4b2e800659ea)
+![268435456_main](https://github.com/user-attachments/assets/5f6582b4-cbd6-4283-941b-e8300987c060)
+
 This is the time taken for input size of 2^28. Merge Sort Appears to be highly scalable, as the time drops significantly as new processes are added. There is a great drop-off followed by a plateau.
 
 #### Sample Sort
