@@ -1,7 +1,7 @@
-set(CMAKE_CXX_COMPILER "/sw/eb/sw/GCCcore/10.2.0/bin/c++")
+set(CMAKE_CXX_COMPILER "/sw/eb/sw/GCCcore/8.3.0/bin/c++")
 set(CMAKE_CXX_COMPILER_ARG1 "")
 set(CMAKE_CXX_COMPILER_ID "GNU")
-set(CMAKE_CXX_COMPILER_VERSION "10.2.0")
+set(CMAKE_CXX_COMPILER_VERSION "8.3.0")
 set(CMAKE_CXX_COMPILER_VERSION_INTERNAL "")
 set(CMAKE_CXX_COMPILER_WRAPPER "")
 set(CMAKE_CXX_STANDARD_COMPUTED_DEFAULT "14")
@@ -18,11 +18,11 @@ set(CMAKE_CXX_SIMULATE_VERSION "")
 
 
 
-set(CMAKE_AR "/sw/eb/sw/binutils/2.35-GCCcore-10.2.0/bin/ar")
-set(CMAKE_CXX_COMPILER_AR "/sw/eb/sw/GCCcore/10.2.0/bin/gcc-ar")
-set(CMAKE_RANLIB "/sw/eb/sw/binutils/2.35-GCCcore-10.2.0/bin/ranlib")
-set(CMAKE_CXX_COMPILER_RANLIB "/sw/eb/sw/GCCcore/10.2.0/bin/gcc-ranlib")
-set(CMAKE_LINKER "/sw/eb/sw/binutils/2.35-GCCcore-10.2.0/bin/ld")
+set(CMAKE_AR "/sw/eb/sw/binutils/2.35/bin/ar")
+set(CMAKE_CXX_COMPILER_AR "/sw/eb/sw/GCCcore/8.3.0/bin/gcc-ar")
+set(CMAKE_RANLIB "/sw/eb/sw/binutils/2.35/bin/ranlib")
+set(CMAKE_CXX_COMPILER_RANLIB "/sw/eb/sw/GCCcore/8.3.0/bin/gcc-ranlib")
+set(CMAKE_LINKER "/sw/eb/sw/binutils/2.35/bin/ld")
 set(CMAKE_COMPILER_IS_GNUCXX 1)
 set(CMAKE_CXX_COMPILER_LOADED 1)
 set(CMAKE_CXX_COMPILER_WORKS TRUE)
@@ -72,5 +72,5 @@ endif()
 
 
 set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "stdc++;m;gcc_s;gcc;c;gcc_s;gcc")
-set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "/sw/eb/sw/zlib/1.2.11-intel-2020b/lib64;/sw/eb/sw/UCX/1.9.0-GCCcore-10.2.0/lib64;/sw/eb/sw/numactl/2.0.13-GCCcore-10.2.0/lib64;/sw/eb/sw/binutils/2.35-GCCcore-10.2.0/lib64;/sw/eb/sw/GCCcore/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0;/sw/eb/sw/GCCcore/10.2.0/lib64;/lib64;/usr/lib64;/sw/eb/sw/zlib/1.2.11-intel-2020b/lib;/sw/eb/sw/imkl/2020.4.304-iimpi-2020b/mkl/lib/intel64;/sw/eb/sw/imkl/2020.4.304-iimpi-2020b/lib/intel64;/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib;/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/lib/release;/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/lib;/sw/eb/sw/UCX/1.9.0-GCCcore-10.2.0/lib;/sw/eb/sw/numactl/2.0.13-GCCcore-10.2.0/lib;/sw/eb/sw/iccifort/2020.4.304/compilers_and_libraries_2020.4.304/linux/tbb/lib/intel64/gcc4.8;/sw/eb/sw/binutils/2.35-GCCcore-10.2.0/lib;/sw/eb/sw/GCCcore/10.2.0/lib")
+set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "/sw/eb/sw/PAPI/6.0.0-GCCcore-8.3.0/lib64;/sw/eb/sw/zlib/1.2.11-GCCcore-8.3.0/lib64;/sw/eb/sw/binutils/2.35/lib64;/sw/eb/sw/GCCcore/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0;/sw/eb/sw/GCCcore/8.3.0/lib64;/lib64;/usr/lib64;/sw/eb/sw/PAPI/6.0.0-GCCcore-8.3.0/lib;/sw/eb/sw/zlib/1.2.11-GCCcore-8.3.0/lib;/sw/eb/sw/binutils/2.35/lib;/sw/eb/sw/imkl/2020.4.304-iimpi-2020b/mkl/lib/intel64;/sw/eb/sw/imkl/2020.4.304-iimpi-2020b/lib/intel64;/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/libfabric/lib;/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/lib/release;/sw/eb/sw/impi/2019.9.304-iccifort-2020.4.304/intel64/lib;/sw/eb/sw/iccifort/2020.4.304/compilers_and_libraries_2020.4.304/linux/tbb/lib/intel64/gcc4.8;/sw/eb/sw/GCCcore/8.3.0/lib")
 set(CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "")

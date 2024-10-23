@@ -59,10 +59,10 @@ RM = /sw/eb/sw/CMake/3.12.1/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /scratch/user/weiwu/proj-1-test
+CMAKE_SOURCE_DIR = /scratch/user/weiwu/435-group-proj/Sample_Sort
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /scratch/user/weiwu/proj-1-test
+CMAKE_BINARY_DIR = /scratch/user/weiwu/435-group-proj/Sample_Sort
 
 #=============================================================================
 # Target rules for target CMakeFiles/samplesort.dir
@@ -71,7 +71,7 @@ CMAKE_BINARY_DIR = /scratch/user/weiwu/proj-1-test
 CMakeFiles/samplesort.dir/all:
 	$(MAKE) -f CMakeFiles/samplesort.dir/build.make CMakeFiles/samplesort.dir/depend
 	$(MAKE) -f CMakeFiles/samplesort.dir/build.make CMakeFiles/samplesort.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/scratch/user/weiwu/proj-1-test/CMakeFiles --progress-num=1,2 "Built target samplesort"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/scratch/user/weiwu/435-group-proj/Sample_Sort/CMakeFiles --progress-num=1,2 "Built target samplesort"
 .PHONY : CMakeFiles/samplesort.dir/all
 
 # Include target in all.
@@ -81,9 +81,9 @@ all: CMakeFiles/samplesort.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/samplesort.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/user/weiwu/proj-1-test/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/user/weiwu/435-group-proj/Sample_Sort/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/samplesort.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/user/weiwu/proj-1-test/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/user/weiwu/435-group-proj/Sample_Sort/CMakeFiles 0
 .PHONY : CMakeFiles/samplesort.dir/rule
 
 # Convenience name for target.

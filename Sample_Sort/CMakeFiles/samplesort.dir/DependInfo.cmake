@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/scratch/user/weiwu/proj-1-test/samplesort.cpp" "/scratch/user/weiwu/proj-1-test/CMakeFiles/samplesort.dir/samplesort.cpp.o"
+  "/scratch/user/weiwu/435-group-proj/Sample_Sort/samplesort.cpp" "/scratch/user/weiwu/435-group-proj/Sample_Sort/CMakeFiles/samplesort.dir/samplesort.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

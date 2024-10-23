@@ -48,10 +48,10 @@ RM = /sw/eb/sw/CMake/3.12.1/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /scratch/user/weiwu/proj-1-test
+CMAKE_SOURCE_DIR = /scratch/user/weiwu/435-group-proj/Sample_Sort
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /scratch/user/weiwu/proj-1-test
+CMAKE_BINARY_DIR = /scratch/user/weiwu/435-group-proj/Sample_Sort
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/user/weiwu/proj-1-test/CMakeFiles /scratch/user/weiwu/proj-1-test/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/user/weiwu/435-group-proj/Sample_Sort/CMakeFiles /scratch/user/weiwu/435-group-proj/Sample_Sort/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/user/weiwu/proj-1-test/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/user/weiwu/435-group-proj/Sample_Sort/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

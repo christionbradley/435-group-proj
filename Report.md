@@ -967,3 +967,80 @@ MPI Sample Sort Calltree:
     }
 }
 ```
+## 4. Performance evaluation
+
+Include detailed analysis of computation performance, communication performance. 
+Include figures and explanation of your analysis.
+
+### 4a. Vary the following parameters
+For input_size's:
+- 2^16, 2^18, 2^20, 2^22, 2^24, 2^26, 2^28
+
+For input_type's:
+- Sorted, Random, Reverse sorted, 1%perturbed
+
+MPI: num_procs:
+- 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024
+
+This should result in 4x7x10=280 Caliper files for your MPI experiments.
+
+### 4b. Hints for performance analysis
+
+To automate running a set of experiments, parameterize your program.
+
+- input_type: "Sorted" could generate a sorted input to pass into your algorithms
+- algorithm: You can have a switch statement that calls the different algorithms and sets the Adiak variables accordingly
+- num_procs: How many MPI ranks you are using
+
+When your program works with these parameters, you can write a shell script 
+that will run a for loop over the parameters above (e.g., on 64 processors, 
+perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).  
+
+### 4c. You should measure the following performance metrics
+- `Time`
+    - Min time/rank
+    - Max time/rank
+    - Avg time/rank
+    - Total time
+    - Variance time/rank
+
+#### Merge Sort
+![65536_main](https://github.com/user-attachments/assets/6c4dda55-3cde-48b0-84cb-9f086f5d28d8)
+This is the time taken for input size of 2^16. As you can tell, this input size is not nearly large enough to justify using parallel processing. More processes ends up taking longer due to overhead.
+
+![16777216_main](https://github.com/user-attachments/assets/27da25ff-bd34-42e4-b5fc-5dadf954c078)
+This is the time taken for 2*24. This is just approaching the optimal input size to justify using parallel processing. There is still too much overhead compared to the granted speedup at 256 and 512 processes. Using fewer or greater processes would make more sense. 
+
+![avg_time_rank_268](https://github.com/user-attachments/assets/25fe2655-ae04-4c7e-b37f-4b2e800659ea)
+This is the time taken for input size of 2^28. Merge Sort Appears to be highly scalable, as the time drops significantly as new processes are added. There is a great drop-off followed by a plateau.
+
+#### Sample Sort
+![image](Sample_Sort/plots/sample_sort_main_65536.png)
+
+Here is the total time it took for the program for various number of processes for input size of 2^16. Based on the graph, it seems like there's a small initial dip, then the overhead needed to allocate the necessary resource becomes more expensive than the computation speed.
+
+![image](Sample_Sort/plots/sample_sort_main_1048576.png)
+
+Here is the total time it took for the program for various number of processes for input size of 2^20. As you can see, it marks a turning point in the trend as there's a much more exponential decrease as the cost of computation becomes more expensive than the cost to allocate resources.
+
+![image](Sample_Sort/plots/sample_sort_main_268435456.png)
+
+Here's the total time it took for the program for various number of processes for the max input size of 2^28. From the graph you can clearly see a strong exponential trend downward which makes the most sense as for such a large input size it's going to be way more computationally expensive to compute rather than allocate resources.
+
+
+## 5. Presentation
+Plots for the presentation should be as follows:
+- For each implementation:
+    - For each of comp_large, comm, and main:
+        - Strong scaling plots for each input_size with lines for input_type (7 plots - 4 lines each)
+        - Strong scaling speedup plot for each input_type (4 plots)
+        - Weak scaling plots for each input_type (4 plots)
+
+Analyze these plots and choose a subset to present and explain in your presentation.
+
+## 6. Final Report
+Submit a zip named `TeamX.zip` where `X` is your team number. The zip should contain the following files:
+- Algorithms: Directory of source code of your algorithms.
+- Data: All `.cali` files used to generate the plots seperated by algorithm/implementation.
+- Jupyter notebook: The Jupyter notebook(s) used to generate the plots for the report.
+- Report.md
