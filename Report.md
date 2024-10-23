@@ -1004,6 +1004,16 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
     - Total time
     - Variance time/rank
 
+#### Sample Sort
+![image](https://github.com/user-attachments/assets/0996a157-2891-4e51-9f1a-d2214632b39f)
+Here is the total time it took for the program for various number of processes for input size of 2^16. Based on the graph, it seems like there's a small initial dip, then the overhead needed to allocate the necessary resource becomes more expensive than the computation speed.
+
+![image](https://github.com/user-attachments/assets/711b58e6-59d4-4735-ac69-29e0d99e99b1)
+Here is the total time it took for the program for various number of processes for input size of 2^20. As you can see, it marks a turning point in the trend as there's a much more exponential decrease as the cost of computation becomes more expensive than the cost to allocate resources.
+
+![image](https://github.com/user-attachments/assets/4ce5644b-bcbd-4b6a-b3a6-736cffc63697)
+Here's the total time it took for the program for various number of processes for the max input size of 2^28. From the graph you can clearly see a strong exponential trend downward which makes the most sense as for such a large input size it's going to be way more computationally expensive to compute rather than allocate resources.
+
 
 ## 5. Presentation
 Plots for the presentation should be as follows:
