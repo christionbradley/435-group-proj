@@ -56,8 +56,8 @@ void sample_sort(int*& arr, int& local_size, int num_tasks, int rank) {
 	CALI_MARK_BEGIN("comm");
 	CALI_MARK_BEGIN("comm_large");
 	MPI_Gather(local_splitters, num_splitters, MPI_INT, global_splitters, num_splitters, MPI_INT, 0, MPI_COMM_WORLD);
-	CALI_MARK_END("comm");
 	CALI_MARK_END("comm_large");
+	CALI_MARK_END("comm");
 
 	int* final_splits = (int*)malloc(num_splitters*sizeof(int));
 	if (rank == 0) {
@@ -75,10 +75,10 @@ void sample_sort(int*& arr, int& local_size, int num_tasks, int rank) {
 
 	// ~ broadcast final split values to all processes to be used in partitioning
 	CALI_MARK_BEGIN("comm");
-	CALI_MARK_BEGIN("comm_large");
+	CALI_MARK_BEGIN("comm_small");
 	MPI_Bcast(final_splits, num_splitters, MPI_INT, 0, MPI_COMM_WORLD);
+	CALI_MARK_END("comm_small");
 	CALI_MARK_END("comm");
-	CALI_MARK_END("comm_large");
 
 	// ~ partition array based on final split values
 	std::vector<int> partitions[num_tasks];
@@ -102,8 +102,8 @@ void sample_sort(int*& arr, int& local_size, int num_tasks, int rank) {
 	CALI_MARK_BEGIN("comm");
 	CALI_MARK_BEGIN("comm_large");
 	MPI_Alltoall(sendcounts, 1, MPI_INT, recvcounts, 1, MPI_INT, MPI_COMM_WORLD);
-	CALI_MARK_END("comm");
 	CALI_MARK_END("comm_large");
+	CALI_MARK_END("comm");
 
 	int total_recv = 0;
 	sdispls[0] = 0;
@@ -124,12 +124,12 @@ void sample_sort(int*& arr, int& local_size, int num_tasks, int rank) {
 	for (int i = 0; i < num_tasks; i++) {
 		std::copy(partitions[i].begin(), partitions[i].end(), sendbuf + sdispls[i]);
 	}
-	
+
 	CALI_MARK_BEGIN("comm");
 	CALI_MARK_BEGIN("comm_large");
 	MPI_Alltoallv(sendbuf, sendcounts, sdispls, MPI_INT, recvbuf, recvcounts, rdispls, MPI_INT, MPI_COMM_WORLD);
-	CALI_MARK_END("comm");
 	CALI_MARK_END("comm_large");
+	CALI_MARK_END("comm");
 
 	std::sort(recvbuf, recvbuf+total_recv);
 	// printLocalArr(recvbuf, total_recv, rank);
@@ -252,24 +252,23 @@ int main(int argc, char *argv[]) {
 
     MPI_Scatter(og_data, local_list_size, MPI_INT, local_list, local_list_size, MPI_INT, 0, MPI_COMM_WORLD);
     
+    CALI_MARK_END("comm_large");
+    CALI_MARK_END("comm");
+
 	if (rank == 0) {
 		free(og_data);
 		og_data = nullptr;
 	}
 
-    CALI_MARK_END("comm_large");
-    CALI_MARK_END("comm");
-
     CALI_MARK_BEGIN("comp");
-    CALI_MARK_BEGIN("comp_small");
+    CALI_MARK_BEGIN("comp_large");
 
     sample_sort(local_list, local_list_size, num_tasks, rank);
 
-    CALI_MARK_END("comp_small");
+    CALI_MARK_END("comp_large");
     CALI_MARK_END("comp");
 
-	CALI_MARK_BEGIN("comm");
-	CALI_MARK_BEGIN("comm_large");
+
 	int* all_local_list_sizes = nullptr;
 	int* displs = nullptr;
 	if (rank == 0) {
@@ -277,8 +276,14 @@ int main(int argc, char *argv[]) {
 		displs = (int*)malloc(num_tasks * sizeof(int));
 	}
 
+	CALI_MARK_BEGIN("comm");
+	CALI_MARK_BEGIN("comm_small");
 	MPI_Gather(&local_list_size, 1, MPI_INT, all_local_list_sizes, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    CALI_MARK_END("comm_small");
+    CALI_MARK_END("comm");
 
+	CALI_MARK_BEGIN("comp");
+	CALI_MARK_BEGIN("comp_small");
 	if (rank == 0) {
 		displs[0] = 0;
 		int total_size = all_local_list_sizes[0];
@@ -292,9 +297,13 @@ int main(int argc, char *argv[]) {
 		// }
 		// std::cout << "\n";
 		og_data = (int*)malloc(total_size * sizeof(int));
-	}
+	}	
+	CALI_MARK_END("comp_small");
+	CALI_MARK_END("comp");
 
 	// gather all the locally sorted list back into og
+	CALI_MARK_BEGIN("comm");
+	CALI_MARK_BEGIN("comm_large");
 	MPI_Gatherv(local_list, local_list_size, MPI_INT, og_data, all_local_list_sizes, displs, MPI_INT, 0, MPI_COMM_WORLD);
     CALI_MARK_END("comm_large");
     CALI_MARK_END("comm");
