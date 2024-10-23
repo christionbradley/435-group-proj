@@ -1004,6 +1004,16 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
     - Total time
     - Variance time/rank
 
+#### Bitonic Sort
+![image](Bitonic_Sort/graphs/16-avg.png)
+This is the total time for input size of 2^16. Since the input size is not that large, the communication overhead created by parallel processing outweighs the benefits of parallel processing, as shown in the graph by higher average time with larger number of processors.
+
+![image](Bitonic_Sort/graphs/20-avg.png)
+This is the total time for input size of 2^20. This input size is justified for using parallel processing as the graph is becoming to look like an exponential decrease, meaning that the benefits of parallel processing started to outweigh the communication overhead. For this input size, using fewer than 128 processes makes sense.
+
+![image](Bitonic_Sort/graphs/28-avg.png)
+This is the total time for input size of 2^28. For a large input size like this, parallel processing is justified as the number of processors increases, the average time exponentially decreases since it's computationally more efficient to split tasks to a large number of worker processes.
+
 #### Merge Sort
 ![65536_main](https://github.com/user-attachments/assets/6c4dda55-3cde-48b0-84cb-9f086f5d28d8)
 This is the time taken for input size of 2^16. As you can tell, this input size is not nearly large enough to justify using parallel processing. More processes ends up taking longer due to overhead.
