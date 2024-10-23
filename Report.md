@@ -1037,6 +1037,19 @@ Here is the total time it took for the program for various number of processes f
 
 Here's the total time it took for the program for various number of processes for the max input size of 2^28. From the graph you can clearly see a strong exponential trend downward which makes the most sense as for such a large input size it's going to be way more computationally expensive to compute rather than allocate resources.
 
+#### Radix Sort
+
+![image](Radix_Sort/plots/radix_sort_main_65536.png)
+
+This graph is the average time of the entire program for input size of 2^16. Once again, the input size is relatively small, which results in the commuication overhead of MPI outweighing the benefits that come with parallel computing, resulting in a higher average time for a greater number of processors. 
+
+![image](Radix_Sort/plots/radix_sort_main_1048576.png)
+
+This graph represents an input size of 2^20. This array size finally sees some benefits from parallel processing as the graph is neariang an inverse exponential curve. The benefits that come with parallel processing have begun to overcome the communication overhead of MPI. 
+
+![image](Radix_Sort/plots/radix_sort_main_268435456.png)
+
+This graph represents the total time for an input array size of 2^28. The wonders of parallel processing can begin to be seen, as finally, as the number of processors increases, the average time for computation exponentially decreases. The communication overhead becomes negligible to the speedup. 
 
 ## 5. Presentation
 Plots for the presentation should be as follows:
