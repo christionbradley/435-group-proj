@@ -1004,6 +1004,16 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
     - Total time
     - Variance time/rank
 
+#### Merge Sort
+![65536_main](https://github.com/user-attachments/assets/6c4dda55-3cde-48b0-84cb-9f086f5d28d8)
+This is the time taken for input size of 2^16. As you can tell, this input size is not nearly large enough to justify using parallel processing. More processes ends up taking longer due to overhead.
+
+![16777216_main](https://github.com/user-attachments/assets/27da25ff-bd34-42e4-b5fc-5dadf954c078)
+This is the time taken for 2*24. This is just approaching the optimal input size to justify using parallel processing. There is still too much overhead compared to the granted speedup at 256 and 512 processes. Using fewer or greater processes would make more sense. 
+
+![avg_time_rank_268](https://github.com/user-attachments/assets/25fe2655-ae04-4c7e-b37f-4b2e800659ea)
+This is the time taken for input size of 2^28. Merge Sort Appears to be highly scalable, as the time drops significantly as new processes are added. There is a great drop-off followed by a plateau.
+
 #### Sample Sort
 ![image](https://github.com/user-attachments/assets/0996a157-2891-4e51-9f1a-d2214632b39f)
 
