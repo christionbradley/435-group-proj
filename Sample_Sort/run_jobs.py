@@ -5,7 +5,8 @@ import time
 input_sizes = [2**16, 2**18, 2**20, 2**22, 2**24, 2**26, 2**28]
 list_types = ["sorted", "random", "reverse_sorted", "1%perturbed"]
 # num_proc_list = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024] # [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
-num_proc_list = [2]
+# completed: 2, 4, 8, 16, 32, 64, 128, 256, 512
+num_proc_list = [1024]
 
 for num_procs in num_proc_list:
 
