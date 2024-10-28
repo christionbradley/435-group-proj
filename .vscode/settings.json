@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "stdexcept": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/Users/sua/Desktop/435-group-proj/Bitonic_Sort"
 }
