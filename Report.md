@@ -1028,15 +1028,15 @@ This is the time taken for 2*24. This is just approaching the optimal input size
 This is the time taken for input size of 2^28. Merge Sort Appears to be highly scalable, as the time drops significantly as new processes are added. There is a great drop-off followed by a plateau.
 
 #### Sample Sort
-![image](Sample_Sort/plots/sample_sort_main_65536.png)
+![image](Sample_Sort/plots/strongscaling_65536_main.png)
 
 Here is the total time it took for the program for various number of processes for input size of 2^16. Based on the graph, it seems like there's a small initial dip, then the overhead needed to allocate the necessary resource becomes more expensive than the computation speed.
 
-![image](Sample_Sort/plots/sample_sort_main_1048576.png)
+![image](Sample_Sort/plots/strongscaling_262144_main.png)
 
 Here is the total time it took for the program for various number of processes for input size of 2^20. As you can see, it marks a turning point in the trend as there's a much more exponential decrease as the cost of computation becomes more expensive than the cost to allocate resources.
 
-![image](Sample_Sort/plots/sample_sort_main_268435456.png)
+![image](Sample_Sort/plots/strongscaling_268435456_main.png)
 
 Here's the total time it took for the program for various number of processes for the max input size of 2^28. From the graph you can clearly see a strong exponential trend downward which makes the most sense as for such a large input size it's going to be way more computationally expensive to compute rather than allocate resources.
 
