@@ -1005,13 +1005,13 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
     - Variance time/rank
 
 #### Bitonic Sort
-![image](Bitonic_Sort/graphs/16-avg.png)
+![16-avg](https://github.com/user-attachments/assets/c90fc1b2-2fca-43d4-bb23-86984bc0f654)
 This is the total time for input size of 2^16. Since the input size is not that large, the communication overhead created by parallel processing outweighs the benefits of parallel processing, as shown in the graph by higher average time with larger number of processors.
 
-![image](Bitonic_Sort/graphs/20-avg.png)
+![20-avg](https://github.com/user-attachments/assets/08711668-230a-4e09-8d85-f5e053bc83ef)
 This is the total time for input size of 2^20. This input size is justified for using parallel processing as the graph is becoming to look like an exponential decrease, meaning that the benefits of parallel processing started to outweigh the communication overhead. For this input size, using fewer than 128 processes makes sense.
 
-![image](Bitonic_Sort/graphs/28-avg.png)
+![28-avg](https://github.com/user-attachments/assets/05443bbe-8671-4024-8995-3db57209316b)
 This is the total time for input size of 2^28. For a large input size like this, parallel processing is justified as the number of processors increases, the average time exponentially decreases since it's computationally more efficient to split tasks to a large number of worker processes.
 
 #### Merge Sort
@@ -1028,29 +1028,29 @@ This is the time taken for 2*24. This is just approaching the optimal input size
 This is the time taken for input size of 2^28. Merge Sort Appears to be highly scalable, as the time drops significantly as new processes are added. There is a great drop-off followed by a plateau.
 
 #### Sample Sort
-![image](Sample_Sort/plots/strongscaling_65536_main.png)
+![strongscaling_65536_main](https://github.com/user-attachments/assets/c6cfcd6e-783f-4c22-8587-f73b770c933d)
 
 Here is the total time it took for the program for various number of processes for input size of 2^16. Based on the graph, it seems like there's a small initial dip, then the overhead needed to allocate the necessary resource becomes more expensive than the computation speed.
 
-![image](Sample_Sort/plots/strongscaling_262144_main.png)
+![strongscaling_262144_main](https://github.com/user-attachments/assets/301b31c4-7b00-43d3-92fe-62ef770bdbb8)
 
 Here is the total time it took for the program for various number of processes for input size of 2^20. As you can see, it marks a turning point in the trend as there's a much more exponential decrease as the cost of computation becomes more expensive than the cost to allocate resources.
 
-![image](Sample_Sort/plots/strongscaling_268435456_main.png)
+![strongscaling_268435456_main](https://github.com/user-attachments/assets/9e671319-a107-4545-8fd1-fce09c900df8)
 
 Here's the total time it took for the program for various number of processes for the max input size of 2^28. From the graph you can clearly see a strong exponential trend downward which makes the most sense as for such a large input size it's going to be way more computationally expensive to compute rather than allocate resources.
 
 #### Radix Sort
 
-![image](Radix_Sort/plots/radix_sort_main_65536.png)
+![radix_sort_main_65536](https://github.com/user-attachments/assets/ff9439ca-52d8-4bd1-bb79-27a3b7864cd6)
 
 This graph is the average time of the entire program for input size of 2^16. Once again, the input size is relatively small, which results in the commuication overhead of MPI outweighing the benefits that come with parallel computing, resulting in a higher average time for a greater number of processors. 
 
-![image](Radix_Sort/plots/radix_sort_main_1048576.png)
+![radix_sort_main_1048576](https://github.com/user-attachments/assets/182c5d05-f5cd-4cde-84ad-3b3c58f2d36e)
 
 This graph represents an input size of 2^20. This array size finally sees some benefits from parallel processing as the graph is neariang an inverse exponential curve. The benefits that come with parallel processing have begun to overcome the communication overhead of MPI. 
 
-![image](Radix_Sort/plots/radix_sort_main_268435456.png)
+![radix_sort_main_268435456](https://github.com/user-attachments/assets/7138c37a-ce8c-4f0b-a6cf-a477c7fbe8ea)
 
 This graph represents the total time for an input array size of 2^28. The wonders of parallel processing can begin to be seen, as finally, as the number of processors increases, the average time for computation exponentially decreases. The communication overhead becomes negligible to the speedup. 
 
